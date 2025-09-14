@@ -18,9 +18,6 @@ spec:
           value: https://github.com/babita0810/tekton-project.git  # Corrected with the actual repository URL
         - name: deleteExisting  # Clean workspace before cloning
           value: "true"
-      secrets:
-        - secretName: git-token-secret  # Reference to the Kubernetes secret for Git authentication
-          mountPath: /tekton/home/.git-credentials
     - name: build  # Task to build and push the Docker image
       taskRef:
         name: buildah  # Reference to the buildah task

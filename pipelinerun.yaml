@@ -5,6 +5,7 @@ metadata:
 spec:
   pipelineRef:
     name: tutorial-pipeline
+  serviceAccountName: pipeline-service-account  # Added ServiceAccount reference
   params:
     - name: url
       value: https://github.com/babita0810/tekton-project.git  # Corrected with the actual repository URL
