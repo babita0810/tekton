@@ -1,0 +1,33 @@
+# Define the Tekton pipeline
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: tutorial-pipeline  # Name of the pipeline
+spec:
+  workspaces:
+    - name: myworkspace  # Define a workspace shared across tasks
+  tasks:
+    - name: fetch-repository  # Task to clone the Git repository
+      taskRef:
+        name: git-clone  # Reference to the git-clone task
+      workspaces:
+        - name: output  # Workspace for the cloned repository
+          workspace: myworkspace
+      params:
+        - name: url  # URL of the Git repository
+          value: https://github.com/your-username/your-repo.git  # Replace with your repository URL
+        - name: deleteExisting  # Clean workspace before cloning
+          value: "true"
+    - name: build  # Task to build and push the Docker image
+      taskRef:
+        name: buildah  # Reference to the buildah task
+      runAfter:
+        - fetch-repository  # Ensure this task runs after fetch-repository
+      params:
+        - name: IMAGE  # Docker image name
+          value: docker.io/your-dockerhub-repo/image-name:latest  # Replace with your DockerHub repository name
+        - name: IMAGE_PUSH_SECRET_NAME  # Secret for DockerHub authentication
+          value: image-push-secrets
+      workspaces:
+        - name: source  # Workspace for the source code
+          workspace: myworkspace

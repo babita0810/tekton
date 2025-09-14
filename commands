@@ -1,0 +1,17 @@
+
+Install Tekton: 
+kubectl apply --filename \
+https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+
+Install CLI
+brew install tektoncd-cli
+
+
+
+docker login -u babita0810
+dckr_pat_962E0galE72uXGxhyaz_7ZJ7TYM
+
+
+export USERNAME=babita0810
+export PASSWORD=dckr_pat_962E0galE72uXGxhyaz_7ZJ7TYM
+kubectl create secret generic image-push-secrets --from-literal=username=$USERNAME --from-literal=password=$PASSWORD
