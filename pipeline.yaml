@@ -5,29 +5,28 @@ metadata:
   name: tutorial-pipeline  # Name of the pipeline
 spec:
   workspaces:
-    - name: myworkspace  # Define a workspace shared across tasks
+    - name: shared-data
+      description: This workspace contains the cloned repo files, so they can be read by the next task.
   tasks:
-    - name: fetch-repository  # Task to clone the Git repository
+    - name: fetch-source
       taskRef:
-        name: git-clone  # Reference to the git-clone task
-      workspaces:
-        - name: output  # Workspace for the cloned repository
-          workspace: myworkspace
+        name: git-clone
       params:
-        - name: url  # URL of the Git repository
-          value: https://github.com/babita0810/tekton-project.git  # Corrected with the actual repository URL
-        - name: deleteExisting  # Clean workspace before cloning
+        - name: url
+          value: https://github.com/babita0810/tekton-project.git
+        - name: deleteExisting
           value: "true"
-    - name: build  # Task to build and push the Docker image
-      taskRef:
-        name: buildah  # Reference to the buildah task
-      runAfter:
-        - fetch-repository  # Ensure this task runs after fetch-repository
-      params:
-        - name: IMAGE  # Docker image name
-          value: docker.io/babita0810/tekton-image:latest  # Corrected with the actual DockerHub repository name
-        - name: IMAGE_PUSH_SECRET_NAME  # Secret for DockerHub authentication
-          value: image-push-secrets
       workspaces:
-        - name: source  # Workspace for the source code
-          workspace: myworkspace
+        - name: output
+          workspace: shared-data
+    - name: build
+      taskRef:
+        name: buildah
+      runAfter:
+        - fetch-source
+      params:
+        - name: IMAGE
+          value: docker.io/babita0810/tekton-image:latest
+      workspaces:
+        - name: source
+          workspace: shared-data

@@ -14,11 +14,12 @@ spec:
     - name: IMAGE_PUSH_SECRET_NAME
       value: image-push-secrets
   workspaces:
-    - name: myworkspace
+
+    - name: shared-data
       volumeClaimTemplate:
         spec:
           accessModes:
             - ReadWriteOnce
           resources:
             requests:
-              storage: 50Mi
+              storage: 1Gi
