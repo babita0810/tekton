@@ -15,9 +15,12 @@ spec:
           workspace: myworkspace
       params:
         - name: url  # URL of the Git repository
-          value: https://github.com/babita0810/tekton.git  # Replace with your repository URL
+          value: https://github.com/babita0810/tekton-project.git  # Corrected with the actual repository URL
         - name: deleteExisting  # Clean workspace before cloning
           value: "true"
+      secrets:
+        - secretName: git-token-secret  # Reference to the Kubernetes secret for Git authentication
+          mountPath: /tekton/home/.git-credentials
     - name: build  # Task to build and push the Docker image
       taskRef:
         name: buildah  # Reference to the buildah task
@@ -25,7 +28,7 @@ spec:
         - fetch-repository  # Ensure this task runs after fetch-repository
       params:
         - name: IMAGE  # Docker image name
-          value: babita0810/tekton:latest  # Replace with your DockerHub repository name
+          value: docker.io/babita0810/tekton-image:latest  # Corrected with the actual DockerHub repository name
         - name: IMAGE_PUSH_SECRET_NAME  # Secret for DockerHub authentication
           value: image-push-secrets
       workspaces:
