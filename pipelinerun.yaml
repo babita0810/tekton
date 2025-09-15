@@ -2,19 +2,21 @@ apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
   generateName: tutorial-pipeline-
+  annotations:
+    tekton.dev/pvc.cleanup: "true"
+    tekton.dev/pod.cleanup: "true"
 spec:
   pipelineRef:
     name: tutorial-pipeline
   serviceAccountName: pipeline-service-account  # Added ServiceAccount reference
   params:
     - name: url
-      value: https://github.com/babita0810/tekton-project.git  # Corrected with the actual repository URL
+      value: https://github.com/babita0810/tekton.git  # Corrected with the actual repository URL
     - name: IMAGE
-      value: docker.io/babita0810/tekton-image:latest  # Corrected with the actual DockerHub repository name
+      value: docker.io/babita0810/tekton:latest  # Corrected with the actual DockerHub repository name
     - name: IMAGE_PUSH_SECRET_NAME
       value: image-push-secrets
   workspaces:
-
     - name: shared-data
       volumeClaimTemplate:
         spec:

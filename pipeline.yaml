@@ -4,6 +4,10 @@ kind: Pipeline
 metadata:
   name: tutorial-pipeline  # Name of the pipeline
 spec:
+  params:
+    - name: IMAGE_PUSH_SECRET_NAME
+      description: Kubernetes secret containing image push credentials
+      default: image-push-secrets
   workspaces:
     - name: shared-data
       description: This workspace contains the cloned repo files, so they can be read by the next task.
@@ -13,7 +17,7 @@ spec:
         name: git-clone
       params:
         - name: url
-          value: https://github.com/babita0810/tekton-project.git
+          value: https://github.com/babita0810/tekton.git
         - name: deleteExisting
           value: "true"
       workspaces:
@@ -26,7 +30,9 @@ spec:
         - fetch-source
       params:
         - name: IMAGE
-          value: docker.io/babita0810/tekton-image:latest
+          value: docker.io/babita0810/tekton:latest
+        - name: IMAGE_PUSH_SECRET_NAME
+          value: $(params.IMAGE_PUSH_SECRET_NAME)
       workspaces:
         - name: source
           workspace: shared-data
